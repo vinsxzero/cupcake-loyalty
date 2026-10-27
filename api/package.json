@@ -1,0 +1,36 @@
+{
+  "name": "cupcake-api",
+  "version": "1.0.0",
+  "description": "cupcake web store",
+  "homepage": "https://github.com/vinsxzero/cupcake-loyalty#readme",
+  "bugs": {
+    "url": "https://github.com/vinsxzero/cupcake-loyalty/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinsxzero/cupcake-loyalty.git"
+  },
+  "license": "ISC",
+  "author": "vinixzero",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "build": "tsc",
+    "start": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "mysql2": "^3.24.6",
+    "path": "^0.12.7",
+    "typeorm": "^1.1.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

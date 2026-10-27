@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doce Gestão | Painel Administrativo</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body>
+    <div class="app">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-icon"><i data-lucide="cake-slice"></i></div>
+          <div>
+            <div class="brand-name">Doce Gestão</div>
+            <div class="brand-subtitle">Painel administrativo</div>
+          </div>
+        </div>
+
+        <div class="nav-label">Principal</div>
+        <nav class="nav-list">
+          <button class="nav-item active" data-page="dashboard">
+            <i data-lucide="layout-dashboard"></i> Dashboard
+          </button>
+          <button class="nav-item" data-page="sales">
+            <i data-lucide="receipt-text"></i> Vendas
+          </button>
+          <button class="nav-item" data-page="products">
+            <i data-lucide="package"></i> Produtos e estoque
+            <span class="nav-count" id="lowStockCount">2</span>
+          </button>
+          <button class="nav-item" data-page="customers">
+            <i data-lucide="users"></i> Clientes
+          </button>
+        </nav>
+
+        <div class="nav-label">Análise</div>
+        <nav class="nav-list">
+          <button class="nav-item" data-page="reports">
+            <i data-lucide="chart-no-axes-combined"></i> Relatórios
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <button class="nav-item" data-page="settings">
+            <i data-lucide="settings"></i> Configurações
+          </button>
+          <div class="user-profile">
+            <div class="avatar">DG</div>
+            <div>
+              <div class="user-name">Administrador</div>
+              <div class="user-role">Gestão da confeitaria</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div style="display: flex; align-items: center; gap: 13px">
+            <button
+              class="icon-button mobile-menu"
+              id="menuBtn"
+              aria-label="Abrir menu"
+            >
+              <i data-lucide="menu"></i>
+            </button>
+            <div class="breadcrumb">
+              Gestão / <strong id="breadcrumb">Dashboard</strong>
+            </div>
+          </div>
+          <div class="topbar-actions">
+            <span class="date-label" id="currentDate"></span>
+            <button class="icon-button" id="topNewSale" title="Registrar venda">
+              <i data-lucide="plus"></i>
+            </button>
+          </div>
+        </header>
+
+        <div class="content">
+          <!-- DASHBOARD -->
+          <section class="section-page visible" id="page-dashboard">
+            <div class="page-heading">
+              <div>
+                <div class="eyebrow">Visão geral</div>
+                <h1>Bom dia, administrador.</h1>
+                <p class="page-description">
+                  Acompanhe o desempenho e a operação da sua confeitaria.
+                </p>
+              </div>
+              <button class="button button-primary" id="newSaleBtn">
+                <i data-lucide="plus"></i> Registrar venda
+              </button>
+            </div>
+
+            <div class="stats-grid">
+              <article class="stat-card">
+                <div class="stat-top">
+                  <span class="stat-label">Faturamento registrado</span>
+                  <span class="stat-icon"><i data-lucide="wallet"></i></span>
+                </div>
+                <div class="stat-value" id="revenueValue">R$ 1.284,50</div>
+                <div class="stat-foot">
+                  Soma das vendas concluídas no sistema
+                </div>
+              </article>
+
+              <article class="stat-card">
+                <div class="stat-top">
+                  <span class="stat-label">Vendas registradas</span>
+                  <span class="stat-icon"
+                    ><i data-lucide="shopping-bag"></i
+                  ></span>
+                </div>
+                <div class="stat-value" id="salesValue">24</div>
+                <div class="stat-foot">Quantidade total de registros</div>
+              </article>
+
+              <article class="stat-card">
+                <div class="stat-top">
+                  <span class="stat-label">Ticket médio</span>
+                  <span class="stat-icon"
+                    ><i data-lucide="chart-no-axes-combined"></i
+                  ></span>
+                </div>
+                <div class="stat-value" id="ticketValue">R$ 53,52</div>
+                <div class="stat-foot">Média por venda concluída</div>
+              </article>
+
+              <article class="stat-card">
+                <div class="stat-top">
+                  <span class="stat-label">Produtos cadastrados</span>
+                  <span class="stat-icon"><i data-lucide="package"></i></span>
+                </div>
+                <div class="stat-value" id="productsValue">12</div>
+                <div class="stat-foot">Itens diferentes no catálogo</div>
+              </article>
+            </div>
+
+            <div class="dashboard-grid">
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <div class="panel-title">Desempenho de vendas</div>
+                    <div class="panel-subtitle">
+                      Exemplo ilustrativo de faturamento semanal
+                    </div>
+                  </div>
+                  <select
+                    class="select"
+                    id="chartPeriod"
+                    aria-label="Período do gráfico"
+                  >
+                    <option value="week">Esta semana</option>
+                    <option value="previous">Semana anterior</option>
+                  </select>
+                </div>
+
+                <div class="chart-container">
+                  <svg
+                    class="chart"
+                    viewBox="0 0 500 225"
+                    preserveAspectRatio="xMidYMid meet"
+                    role="img"
+                    aria-label="Gráfico ilustrativo de vendas da semana"
+                  >
+                    <defs>
+                      <linearGradient
+                        id="chartFill"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stop-color="#bd8b80"
+                          stop-opacity=".24"
+                        />
+                        <stop
+                          offset="100%"
+                          stop-color="#bd8b80"
+                          stop-opacity="0"
+                        />
+                      </linearGradient>
+                    </defs>
+                    <g>
+                      <line
+                        class="chart-gridline"
+                        x1="42"
+                        y1="25"
+                        x2="480"
+                        y2="25"
+                      />
+                      <line
+                        class="chart-gridline"
+                        x1="42"
+                        y1="70"
+                        x2="480"
+                        y2="70"
+                      />
+                      <line
+                        class="chart-gridline"
+                        x1="42"
+                        y1="115"
+                        x2="480"
+                        y2="115"
+                      />
+                      <line
+                        class="chart-gridline"
+                        x1="42"
+                        y1="160"
+                        x2="480"
+                        y2="160"
+                      />
+                      <text class="chart-label" x="4" y="29">R$ 800</text>
+                      <text class="chart-label" x="4" y="74">R$ 600</text>
+                      <text class="chart-label" x="4" y="119">R$ 400</text>
+                      <text class="chart-label" x="4" y="164">R$ 200</text>
+                      <text class="chart-label" x="18" y="205">R$ 0</text>
+                      <path
+                        class="chart-area"
+                        id="chartArea"
+                        d="M 48 132 L 118 108 L 188 120 L 258 68 L 328 87 L 398 43 L 468 55 L 468 185 L 48 185 Z"
+                      />
+                      <path
+                        class="chart-line"
+                        id="chartLine"
+                        d="M 48 132 L 118 108 L 188 120 L 258 68 L 328 87 L 398 43 L 468 55"
+                      />
+                      <g id="chartDots">
+                        <circle class="chart-dot" cx="48" cy="132" r="4" />
+                        <circle class="chart-dot" cx="118" cy="108" r="4" />
+                        <circle class="chart-dot" cx="188" cy="120" r="4" />
+                        <circle class="chart-dot" cx="258" cy="68" r="4" />
+                        <circle class="chart-dot" cx="328" cy="87" r="4" />
+                        <circle class="chart-dot" cx="398" cy="43" r="4" />
+                        <circle class="chart-dot" cx="468" cy="55" r="4" />
+                      </g>
+                      <g class="chart-label" text-anchor="middle">
+                        <text x="48" y="205">Seg</text>
+                        <text x="118" y="205">Ter</text>
+                        <text x="188" y="205">Qua</text>
+                        <text x="258" y="205">Qui</text>
+                        <text x="328" y="205">Sex</text>
+                        <text x="398" y="205">Sáb</text>
+                        <text x="468" y="205">Dom</text>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+                <div class="chart-legend">
+                  <span class="legend-dot"></span>
+                  Faturamento diário — dados demonstrativos
+                </div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <div class="panel-title">Produtos em destaque</div>
+                    <div class="panel-subtitle">
+                      Itens mais vendidos (exemplo)
+                    </div>
+                  </div>
+                  <button class="text-link" data-goto="products">
+                    Ver estoque
+                  </button>
+                </div>
+
+                <div class="product-list" id="featuredProducts">
+                  <div class="product-row">
+                    <div class="product-thumb">🧁</div>
+                    <div class="product-info">
+                      <div class="product-name">Cupcake de chocolate</div>
+                      <div class="product-meta">32 unidades vendidas</div>
+                    </div>
+                    <div class="product-amount">
+                      R$ 256,00<small>Faturamento</small>
+                    </div>
+                  </div>
+                  <div class="product-row">
+                    <div class="product-thumb">🍓</div>
+                    <div class="product-info">
+                      <div class="product-name">Cupcake de morango</div>
+                      <div class="product-meta">26 unidades vendidas</div>
+                    </div>
+                    <div class="product-amount">
+                      R$ 234,00<small>Faturamento</small>
+                    </div>
+                  </div>
+                  <div class="product-row">
+                    <div class="product-thumb">🍫</div>
+                    <div class="product-info">
+                      <div class="product-name">Brownie tradicional</div>
+                      <div class="product-meta">18 unidades vendidas</div>
+                    </div>
+                    <div class="product-amount">
+                      R$ 162,00<small>Faturamento</small>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <article class="panel table-panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Vendas recentes</div>
+                  <div class="panel-subtitle">
+                    Últimas movimentações registradas
+                  </div>
+                </div>
+                <button class="button button-secondary" data-goto="sales">
+                  Ver todas <i data-lucide="arrow-right"></i>
+                </button>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nº da venda</th>
+                      <th>Cliente</th>
+                      <th>Data</th>
+                      <th>Pagamento</th>
+                      <th>Valor</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentSalesBody"></tbody>
+                </table>
+              </div>
+              <div class="panel-footer">
+                <span id="recentSalesCount">Registros de exemplo</span>
+                <button class="text-link" data-goto="sales">
+                  Acessar histórico
+                </button>
+              </div>
+            </article>
+          </section>
+
+          <!-- VENDAS -->
+          <section class="section-page" id="page-sales">
+            <div class="page-heading">
+              <div>
+                <div class="eyebrow">Operação</div>
+                <h1>Gestão de vendas</h1>
+                <p class="page-description">
+                  Consulte e registre as movimentações da confeitaria.
+                </p>
+              </div>
+              <button class="button button-primary" id="salesNewBtn">
+                <i data-lucide="plus"></i> Nova venda
+              </button>
+            </div>
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Histórico de vendas</div>
+                  <div class="panel-subtitle">
+                    Pesquise por cliente ou número da venda
+                  </div>
+                </div>
+                <div class="table-actions">
+                  <label class="search-box">
+                    <i data-lucide="search"></i>
+                    <input
+                      id="salesSearch"
+                      placeholder="Buscar venda..."
+                      aria-label="Buscar venda"
+                    />
+                  </label>
+                  <select
+                    class="select"
+                    id="salesStatusFilter"
+                    aria-label="Filtrar por status"
+                  >
+                    <option value="">Todos os status</option>
+                    <option value="Concluída">Concluídas</option>
+                    <option value="Pendente">Pendentes</option>
+                    <option value="Cancelada">Canceladas</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nº da venda</th>
+                      <th>Cliente</th>
+                      <th>Data</th>
+                      <th>Pagamento</th>
+                      <th>Valor</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="allSalesBody"></tbody>
+                </table>
+              </div>
+              <div class="panel-footer"><span id="allSalesCount"></span></div>
+            </article>
+          </section>
+
+          <!-- PRODUTOS -->
+          <section class="section-page" id="page-products">
+            <div class="page-heading">
+              <div>
+                <div class="eyebrow">Catálogo</div>
+                <h1>Produtos e estoque</h1>
+                <p class="page-description">
+                  Controle os produtos disponíveis e suas quantidades.
+                </p>
+              </div>
+              <button class="button button-primary" id="newProductBtn">
+                <i data-lucide="plus"></i> Novo produto
+              </button>
+            </div>
+            <div class="stats-grid">
+              <article class="stat-card">
+                <div class="stat-label">Produtos cadastrados</div>
+                <div class="stat-value" id="inventoryProductCount">12</div>
+                <div class="stat-foot">Itens distintos no catálogo</div>
+              </article>
+              <article class="stat-card">
+                <div class="stat-label">Unidades em estoque</div>
+                <div class="stat-value" id="inventoryUnits">248</div>
+                <div class="stat-foot">Soma das quantidades registradas</div>
+              </article>
+              <article class="stat-card">
+                <div class="stat-label">Estoque baixo</div>
+                <div class="stat-value" id="inventoryLow">2</div>
+                <div class="stat-foot">Cinco unidades ou menos</div>
+              </article>
+              <article class="stat-card">
+                <div class="stat-label">Valor do estoque</div>
+                <div class="stat-value" id="inventoryValue">R$ 0,00</div>
+                <div class="stat-foot">Estimativa pelo preço de venda</div>
+              </article>
+            </div>
+            <article class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Catálogo de produtos</div>
+                <label class="search-box">
+                  <i data-lucide="search"></i>
+                  <input
+                    id="productSearch"
+                    placeholder="Buscar produto..."
+                    aria-label="Buscar produto"
+                  />
+                </label>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Produto</th>
+                      <th>Categoria</th>
+                      <th>Preço unitário</th>
+                      <th>Quantidade</th>
+                      <th>Status do estoque</th>
+                    </tr>
+                  </thead>
+                  <tbody id="productsBody"></tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <!-- CLIENTES -->
+          <section class="section-page" id="page-customers">
+            <div class="page-heading">
+              <div>
+                <div class="eyebrow">Relacionamento</div>
+                <h1>Gestão de clientes</h1>
+                <p class="page-description">
+                  Organize os dados e acompanhe o histórico dos clientes.
+                </p>
+              </div>
+              <button class="button button-primary" id="newCustomerBtn">
+                <i data-lucide="plus"></i> Novo cliente
+              </button>
+            </div>
+            <article class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Clientes cadastrados</div>
+                <label class="search-box">
+                  <i data-lucide="search"></i>
+                  <input
+                    id="customerSearch"
+                    placeholder="Buscar cliente..."
+                    aria-label="Buscar cliente"
+                  />
+                </label>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Telefone</th>
+                      <th>E-mail</th>
+                      <th>Cadastro</th>
+                    </tr>
+                  </thead>
+                  <tbody id="customersBody"></tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <!-- RELATÓRIOS -->
+          <section class="section-page" id="page-reports">
+            <div class="page-heading">
+              <div>
+                <div class="eyebrow">Indicadores</div>
+                <h1>Relatórios gerenciais</h1>
+                <p class="page-description">
+                  Consulte os indicadores calculados com os registros
+                  disponíveis.
+                </p>
+              </div>
+            </div>
+            <div class="stats-grid">
+              <article class="stat-card">
+                <div class="stat-label">Faturamento concluído</div>
+                <div class="stat-value" id="reportRevenue">R$ 0,00</div>
+                <div class="stat-foot">Vendas não canceladas ou pendentes</div>
+              </article>
+              <article class="stat-card">
+                <div class="stat-label">Vendas concluídas</div>
+                <div class="stat-value" id="reportSales">0</div>
+                <div class="stat-foot">Registros com status concluído</div>
+              </article>
+              <article class="stat-card">
+                <div class="stat-label">Ticket médio</div>
+                <div class="stat-value" id="reportTicket">R$ 0,00</div>
+                <div class="stat-foot">
+                  Faturamento dividido pelas vendas concluídas
+                </div>
+              </article>
+              <article class="stat-card">
+                <div class="stat-label">Clientes cadastrados</div>
+                <div class="stat-value" id="reportCustomers">0</div>
+                <div class="stat-foot">Total de clientes registrados</div>
+              </article>
+            </div>
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Resumo financeiro</div>
+                  <div class="panel-subtitle">
+                    Consolidado dos registros atuais
+                  </div>
+                </div>
+                <button class="button button-secondary" id="exportBtn">
+                  <i data-lucide="download"></i> Exportar CSV
+                </button>
+              </div>
+              <div class="product-list" id="reportSummary"></div>
+            </article>
+          </section>
+
+          <!-- CONFIGURAÇÕES -->
+          <section class="section-page" id="page-settings">
+            <div class="page-heading">
+              <div>
+                <div class="eyebrow">Sistema</div>
+                <h1>Configurações</h1>
+                <p class="page-description">
+                  Informações básicas da aplicação.
+                </p>
+              </div>
+            </div>
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Sobre o sistema</div>
+                  <div class="panel-subtitle">
+                    Doce Gestão — controle administrativo de confeitaria
+                  </div>
+                </div>
+              </div>
+              <div class="product-list">
+                <p style="line-height: 1.9; color: var(--muted)">
+                  Esta versão é uma demonstração de interface, com registros
+                  mantidos somente durante a sessão da página. Para uso real,
+                  será necessário integrar uma API, banco de dados, autenticação
+                  e regras de acesso.
+                </p>
+              </div>
+            </article>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- MODAL DE VENDA -->
+    <div
+      class="modal-overlay"
+      id="saleModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+    >
+      <form class="modal" id="saleForm">
+        <div class="modal-header">
+          <div>
+            <h2 id="modalTitle">Registrar venda</h2>
+            <p>Preencha as informações da movimentação.</p>
+          </div>
+          <button
+            class="icon-button"
+            type="button"
+            data-close="saleModal"
+            aria-label="Fechar"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="field full">
+              <label for="saleCustomer">Cliente</label>
+              <input
+                id="saleCustomer"
+                placeholder="Nome do cliente"
+                required
+                maxlength="100"
+              />
+            </div>
+            <div class="field full">
+              <label for="saleProduct">Produto</label>
+              <select id="saleProduct" required></select>
+            </div>
+            <div class="field">
+              <label for="saleQuantity">Quantidade</label>
+              <input
+                id="saleQuantity"
+                type="number"
+                min="1"
+                step="1"
+                value="1"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="salePayment">Forma de pagamento</label>
+              <select id="salePayment" required>
+                <option>Pix</option>
+                <option>Dinheiro</option>
+                <option>Cartão de débito</option>
+                <option>Cartão de crédito</option>
+                <option>Transferência</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label for="saleStatus">Status da venda</label>
+              <select id="saleStatus">
+                <option>Concluída</option>
+                <option>Pendente</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-total">
+            <span>Valor total</span>
+            <strong id="saleTotal">R$ 0,00</strong>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="button button-secondary"
+            type="button"
+            data-close="saleModal"
+          >
+            Cancelar
+          </button>
+          <button class="button button-primary" type="submit">
+            Salvar venda
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- MODAL DE PRODUTO -->
+    <div
+      class="modal-overlay"
+      id="productModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="productModalTitle"
+    >
+      <form class="modal" id="productForm">
+        <div class="modal-header">
+          <div>
+            <h2 id="productModalTitle">Novo produto</h2>
+            <p>Adicione um item ao catálogo da confeitaria.</p>
+          </div>
+          <button
+            class="icon-button"
+            type="button"
+            data-close="productModal"
+            aria-label="Fechar"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="field full">
+              <label for="productName">Nome do produto</label>
+              <input id="productName" required maxlength="100" />
+            </div>
+            <div class="field">
+              <label for="productCategory">Categoria</label>
+              <select id="productCategory">
+                <option>Cupcake</option>
+                <option>Bolo</option>
+                <option>Brownie</option>
+                <option>Doce</option>
+                <option>Outro</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="productPrice">Preço unitário (R$)</label>
+              <input
+                id="productPrice"
+                type="number"
+                min="0.01"
+                step="0.01"
+                required
+              />
+            </div>
+            <div class="field full">
+              <label for="productQuantity">Quantidade em estoque</label>
+              <input
+                id="productQuantity"
+                type="number"
+                min="0"
+                step="1"
+                value="0"
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="button button-secondary"
+            type="button"
+            data-close="productModal"
+          >
+            Cancelar
+          </button>
+          <button class="button button-primary" type="submit">
+            Cadastrar produto
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- MODAL DE CLIENTE -->
+    <div
+      class="modal-overlay"
+      id="customerModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="customerModalTitle"
+    >
+      <form class="modal" id="customerForm">
+        <div class="modal-header">
+          <div>
+            <h2 id="customerModalTitle">Novo cliente</h2>
+            <p>Cadastre os dados para consulta futura.</p>
+          </div>
+          <button
+            class="icon-button"
+            type="button"
+            data-close="customerModal"
+            aria-label="Fechar"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="field full">
+              <label for="customerName">Nome completo</label>
+              <input id="customerName" required maxlength="100" />
+            </div>
+            <div class="field full">
+              <label for="customerPhone">Telefone</label>
+              <input
+                id="customerPhone"
+                type="tel"
+                maxlength="25"
+                placeholder="(11) 99999-9999"
+              />
+            </div>
+            <div class="field full">
+              <label for="customerEmail">E-mail</label>
+              <input
+                id="customerEmail"
+                type="email"
+                maxlength="150"
+                placeholder="cliente@exemplo.com"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="button button-secondary"
+            type="button"
+            data-close="customerModal"
+          >
+            Cancelar
+          </button>
+          <button class="button button-primary" type="submit">
+            Cadastrar cliente
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="../components/index.js"></script>
+  </body>
+</html>
