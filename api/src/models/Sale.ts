@@ -3,28 +3,36 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+
 import { User } from "./User.js";
 import { Product } from "./Product.js";
 
 @Entity("sales")
 export class Sale {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
+
   @Column("double")
   total!: number;
+
   @Column("varchar")
   status!: string;
+
   @Column("varchar")
   paymentMethod!: string;
 
   @CreateDateColumn()
   CreatedAt!: Date;
 
-  @OneToMany(() => Product, (product) => product.sale)
-  product!: Product[];
-  @ManyToOne(() => User, (user) => user.sales)
+  @ManyToOne(() => Product, (product) => product.sales, {
+    nullable: false,
+  })
+  product!: Product;
+
+  @ManyToOne(() => User, (user) => user.sales, {
+    nullable: false,
+  })
   user!: User;
 }

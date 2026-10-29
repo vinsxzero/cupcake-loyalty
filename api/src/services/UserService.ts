@@ -63,8 +63,8 @@ export class UserService {
     user.password = hashPassword;
     await userRepository.save(user);
   }
-  async deleteUser(email: string) {
-    const user = await userRepository.findOneBy({ email });
+  async deleteUser(id: string) {
+    const user = await userRepository.findOneBy({ id });
     if (!user) {
       throw new Error("User not found");
     }

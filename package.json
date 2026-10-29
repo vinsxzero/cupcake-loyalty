@@ -1,0 +1,22 @@
+{
+  "name": "cupcake-loyalty",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd api && npm run start",
+    "build": "cd api && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinsxzero/cupcake-loyalty.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vinsxzero/cupcake-loyalty/issues"
+  },
+  "homepage": "https://github.com/vinsxzero/cupcake-loyalty#readme"
+}
