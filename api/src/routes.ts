@@ -26,6 +26,11 @@ router.post(
   // ensureAuth,
   userController.createUser.bind(userController),
 ); //✅
+router.get(
+  "/get-users",
+  // ensureAuth,
+  userController.getUsers.bind(userController),
+); //✅
 router.post("/login", await userController.loginUser.bind(userController));
 router.get(
   "/main",

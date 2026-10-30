@@ -11,6 +11,7 @@ export default class SaleService {
     total: number,
     status: string,
     paymentMethod: string,
+    quantity: number,
     productId: string,
     userId: string,
   ) {
@@ -34,6 +35,7 @@ export default class SaleService {
       total,
       status,
       paymentMethod,
+      quantity,
       product,
       user,
     });

@@ -23,6 +23,9 @@ export class Sale {
   @Column("varchar")
   paymentMethod!: string;
 
+  @Column("int")
+  quantity!: number;
+
   @CreateDateColumn()
   CreatedAt!: Date;
 

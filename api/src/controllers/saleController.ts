@@ -4,12 +4,14 @@ const saleService = new SaleService();
 
 export default class SaleController {
   async createSale(req: any, res: any) {
-    const { total, status, paymentMethod, productId, userId } = req.body;
+    const { total, status, paymentMethod, quantity, productId, userId } =
+      req.body;
     try {
       const sale = await saleService.createSale(
         total,
         status,
         paymentMethod,
+        quantity,
         productId,
         userId,
       );
