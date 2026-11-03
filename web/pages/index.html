@@ -36,7 +36,7 @@
             <i data-lucide="package"></i> Produtos e estoque
             <span class="nav-count" id="lowStockCount">2</span>
           </button>
-          <button class="nav-item" data-page="customers">
+          <button class="nav-item" id="btnCustomer" data-page="customers">
             <i data-lucide="users"></i> Clientes
           </button>
         </nav>
@@ -356,7 +356,7 @@
                   <thead>
                     <tr>
                       <th>Nome</th>
-                      <th>Telefone</th>
+
                       <th>E-mail</th>
                       <th>Cadastro</th>
                     </tr>
@@ -647,15 +647,6 @@
               <input id="customerName" required maxlength="100" />
             </div>
             <div class="field full">
-              <label for="customerPhone">Telefone</label>
-              <input
-                id="customerPhone"
-                type="tel"
-                maxlength="25"
-                placeholder="(11) 99999-9999"
-              />
-            </div>
-            <div class="field full">
               <label for="customerEmail">E-mail</label>
               <input
                 id="customerEmail"
@@ -663,6 +654,14 @@
                 maxlength="150"
                 placeholder="cliente@exemplo.com"
               />
+            </div>
+            <div class="field full">
+              <label for="roleCustumer">Função</label>
+              <select id="roleCustumer">
+                <option value="admin">Administrador</option>
+                <option value="client">Cliente</option>
+                <option value="logistics">Logística</option>
+              </select>
             </div>
           </div>
         </div>

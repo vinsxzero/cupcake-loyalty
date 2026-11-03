@@ -11,7 +11,7 @@ export class UserService {
     name: string;
     password: string;
     role: string;
-  }): Promise<void> {
+  }) {
     const hashPassword = await bcrypt.hash(newUser.password, 10);
 
     const user = userRepository.create({
@@ -22,6 +22,7 @@ export class UserService {
     });
 
     await userRepository.save(user);
+    return user;
   }
   async getUsers() {
     const users = await userRepository.find({

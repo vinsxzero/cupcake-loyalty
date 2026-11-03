@@ -266,6 +266,77 @@ async function dashboardProducts() {
     featuredProducts.appendChild(productElement);
   }
 }
+const tableCustomers = document.getElementById("customersBody");
+async function dashboardCustomers() {
+  const customers = await fetch("/get-users", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  const dataC = await customers.json();
+  for (i = 0; i < dataC.length; i++) {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${capitalizeFirstLetter(dataC[i].name)}</td>
+      <td>${dataC[i].email}</td>
+      <td>${dataC[i].role.toUpperCase()}</td>
+    `;
+    tableCustomers.appendChild(row);
+  }
+}
+const customerForm = document.getElementById("customerForm");
+const customerName = document.getElementById("customerName");
+const customerEmail = document.getElementById("customerEmail");
+const roleCustumer = document.getElementById("roleCustumer");
+function generateRandomPassword(length) {
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+}
+async function createCustomer() {
+  const name = customerName.value;
+  const email = customerEmail.value;
+  const role = roleCustumer.value;
+  const password = generateRandomPassword(8);
+  const customerData = {
+    name: name,
+    email: email,
+    role: role,
+    password: password,
+  };
 
+  const response = await fetch("/create-user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(customerData),
+  });
+  if (response.ok) {
+    const result = await response.json();
+    alert(`Cliente criado com sucesso! Senha: ${password}`);
+    return result;
+  }
+  console.log(response);
+  alert("Erro ao criar cliente. Verifique se o e-mail já está em uso.");
+}
+customerForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  await createCustomer();
+  closeModal("customerModal");
+  location.reload();
+});
+$("#btnCustomer").addEventListener("click", () => {
+  tableCustomers.innerHTML = "";
+  dashboardCustomers();
+});
 dashboardSales();
 dashboardProducts();
