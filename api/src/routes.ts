@@ -209,15 +209,29 @@ const saleController = new SaleController();
 router.get("/", (req: Request, res: Response) => {
   res.sendFile(path.join(frontendPath, "/pages/login.html"));
 }); //✅
-router.post("/send-email", async (req: Request, res: Response) => {});
+router.get("/activate-user/:email", (req: Request, res: Response) => {
+  res.sendFile(path.join(frontendPath, "/pages/activate-account.html"));
+});
+
 router.post(
   "/create-user",
   // ensureAuth,
   async (req: Request, res: Response) => {
     const user = await userController.createUser(req, res);
-    await userController.sendEmail(user);
+    await userController.sendEmailCreate(user);
   },
 ); //✅
+
+router.put(
+  "/activate-user/:email",
+  userController.activateUser.bind(userController),
+);
+router.post("/forget-pass", async (req: Request, res: Response) => {
+  await userController.forgetPassword(req, res);
+}); //✅
+router.get("/forget-pass", (req: Request, res: Response) => {
+  res.sendFile(path.join(frontendPath, "/pages/forgetPass.html"));
+}); //✅
 router.get(
   "/get-users",
   // ensureAuth,

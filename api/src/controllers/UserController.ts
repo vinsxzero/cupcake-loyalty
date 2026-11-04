@@ -15,7 +15,38 @@ export class UserController {
       res.status(500).json({ message: "Internal server error" });
     }
   }
-  async sendEmail(user: any) {
+  async forgetPassword(req: any, res: any) {
+    try {
+      const { email } = req.body;
+      const user = await userService.forgetPassword(email);
+      if (!user) {
+        throw new Error("Error generating temporary password");
+      }
+
+      res.status(200).json({
+        message: "Temporary password generated successfully",
+      });
+
+      return user;
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+  async activateUser(req: any, res: any) {
+    try {
+      const { email } = req.params;
+
+      const { oldPassword, newPassword } = req.body;
+
+      await userService.activateUser(email, oldPassword, newPassword);
+
+      res.status(200).json({ message: "User activated successfully" });
+    } catch (error) {
+      console.error("Error activating user:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+  async sendEmailCreate(user: any) {
     try {
       const mailerSend = new MailerSend({
         apiKey: process.env.api_key_mailersend as string,
@@ -191,10 +222,16 @@ export class UserController {
               Equipe Doce Gestão.`,
         );
       await mailerSend.email.send(emailParams);
-    } catch (err) {
-      throw new Error("Error sending email" + err);
+    } catch (err: any) {
+      console.error("Erro ao enviar e-mail:", err);
+      console.error("Detalhes:", err.body || err.message || err);
+
+      throw new Error(
+        `Error sending email: ${JSON.stringify(err.body || err.message || err)}`,
+      );
     }
   }
+
   async getUsers(req: any, res: any) {
     try {
       const users = await userService.getUsers();
@@ -209,8 +246,13 @@ export class UserController {
       const { email, password } = req.body;
 
       const response = await userService.loginUser(email, password);
-
-      res
+      if (response.user.isActive === false) {
+        return res.status(403).json({
+          message: "User is not active. Please activate your account.",
+          redirect: "/activate-user/" + encodeURIComponent(email),
+        });
+      }
+      return res
         .cookie("token", response.token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
@@ -218,9 +260,13 @@ export class UserController {
           maxAge: 60 * 60 * 1000,
         })
         .status(200)
-        .json({ message: "Login successful", token: response.token });
+        .json({
+          message: "Login successful",
+        });
     } catch (error) {
-      res.status(500).json({ message: "Credenciais inválidas" });
+      return res
+        .status(500)
+        .json({ message: (error as Error).message || "Internal server error" });
     }
   }
   async updatePassword(req: any, res: any) {

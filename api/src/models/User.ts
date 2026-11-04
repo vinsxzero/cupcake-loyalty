@@ -13,7 +13,8 @@ export class User {
   password!: string;
   @Column("varchar", { length: 255 })
   role!: string;
-
+  @Column("boolean", { default: false })
+  isActive!: boolean;
   @OneToMany(() => Sale, (sale) => sale.user)
   sales!: Sale[];
 }

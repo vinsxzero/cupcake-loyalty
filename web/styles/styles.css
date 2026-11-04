@@ -1224,3 +1224,22 @@ td {
     padding: 14px 16px;
   }
 }
+
+.password-reqs {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.password-reqs ul {
+  padding-left: 18px;
+}
+.password-reqs li {
+  margin-left: 1rem;
+  list-style: none;
+  margin-bottom: 4px;
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+}
