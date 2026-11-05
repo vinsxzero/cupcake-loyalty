@@ -107,8 +107,10 @@ const salesValue = document.getElementById("salesValue");
 const ticketValue = document.getElementById("ticketValue");
 const productsValue = document.getElementById("productsValue");
 const tableSales = document.getElementById("tableSales");
-
+const allSalesBody = document.getElementById("allSalesBody");
+const productsBody = document.getElementById("productsBody");
 const saleForm = document.getElementById("saleForm");
+const productForm = document.getElementById("productForm");
 
 const customerSelect = document.getElementById("saleCustomerSelect");
 async function searchUser() {
@@ -128,7 +130,44 @@ async function searchUser() {
   });
 }
 const saleProduct = document.getElementById("saleProduct");
+const productName = document.getElementById("productName");
+const productCategory = document.getElementById("productCategory");
+const productPrice = document.getElementById("productPrice");
+const productQuantity = document.getElementById("productQuantity");
 
+async function createProduct() {
+  const name = productName.value;
+  const category = productCategory.value;
+  const price = parseFloat(productPrice.value);
+  const stock = parseInt(productQuantity.value);
+  const productData = {
+    name,
+    category,
+    price,
+    stock,
+  };
+  const response = await fetch("/create-product", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(productData),
+  });
+  const data = await response.json();
+  console.log(data);
+  if (!response.ok) {
+    const errorData = await response.json();
+    alert(`Erro ao criar produto: ${errorData.message}`);
+    return;
+  }
+  return data;
+}
+productForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  await createProduct();
+  closeModal("productModal");
+});
 async function searchProduct() {
   const products = await fetch("/get-products", {
     method: "GET",
@@ -196,6 +235,11 @@ async function createSale() {
     credentials: "include",
     body: JSON.stringify(saleData),
   });
+  if (!response.ok) {
+    const errorData = await response.json();
+    alert(`Erro ao criar venda: ${errorData.message}`);
+    return;
+  }
   const result = await response.json();
   return result;
 }
@@ -216,7 +260,25 @@ async function dashboardSales() {
   });
 
   const dataS = await sales.json();
-
+  return dataS;
+}
+async function displayAllSales() {
+  const dataS = await dashboardSales();
+  for (i = 0; i < dataS.length; i++) {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${dataS[i].id}</td>
+      <td>${capitalizeFirstLetter(dataS[i].user.name)}</td>
+      <td>${new Date(dataS[i].CreatedAt).toLocaleDateString()}</td>
+      <td>${dataS[i].paymentMethod}</td>
+      <td>${money(dataS[i].total)}</td>
+      <td>${dataS[i].status}</td>
+    `;
+    allSalesBody.appendChild(row);
+  }
+}
+async function displayDashboardSales() {
+  const dataS = await dashboardSales();
   let totalSales = 0;
   //total amount of sales
   for (i = 0; i < dataS.length; i++) {
@@ -248,6 +310,49 @@ async function dashboardProducts() {
     credentials: "include",
   });
   const dataP = await products.json();
+  return dataP;
+}
+const inventoryProductCount = document.getElementById("inventoryProductCount");
+const inventoryLow = document.getElementById("inventoryLow");
+const inventoryUnits = document.getElementById("inventoryUnits");
+const inventoryValue = document.getElementById("inventoryValue");
+async function displayAllProducts() {
+  const dataP = await dashboardProducts();
+  let lowStock = 0;
+  let allStock = 0;
+  let invValue = 0;
+  for (i = 0; i < dataP.length; i++) {
+    let stockStatus = "";
+    allStock += dataP[i].stock;
+    if (dataP[i].stock > 15) {
+      stockStatus = "Em estoque";
+    } else if (dataP[i].stock <= 15) {
+      stockStatus = "Estoque baixo";
+      lowStock++;
+    } else {
+      stockStatus = "Fora de estoque";
+      lowStock++;
+    }
+
+    invValue += dataP[i].stock * dataP[i].price;
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+    <td>${capitalizeFirstLetter(dataP[i].name)}</td>
+    <td>${dataP[i].stock}</td>
+    <td>${money(dataP[i].price)}</td>
+    <td>${stockStatus}</td>
+    `;
+    productsBody.appendChild(row);
+  }
+
+  inventoryProductCount.textContent = dataP.length;
+  inventoryLow.textContent = lowStock;
+  inventoryUnits.textContent = allStock;
+  inventoryValue.textContent = money(invValue);
+}
+async function displayDashboardProducts() {
+  const dataP = await dashboardProducts();
   productsValue.textContent = dataP.length;
   const featuredProducts = document.getElementById("featuredProducts");
   for (i = 0; i < 2; i++) {
@@ -338,5 +443,7 @@ $("#btnCustomer").addEventListener("click", () => {
   tableCustomers.innerHTML = "";
   dashboardCustomers();
 });
-dashboardSales();
-dashboardProducts();
+displayAllSales();
+displayAllProducts();
+displayDashboardSales();
+displayDashboardProducts();

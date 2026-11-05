@@ -17,7 +17,12 @@ export default class SaleController {
       );
       res.status(201).json(sale);
     } catch (error) {
-      console.log(error);
+      res
+        .status(500)
+        .json({
+          message: "Quantidade insuficiente em estoque",
+          error: Error as any,
+        });
       throw new Error("Error creating sale");
     }
   }

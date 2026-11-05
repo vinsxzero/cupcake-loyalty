@@ -30,6 +30,11 @@ export default class SaleService {
     if (!user) {
       throw new Error("User not found");
     }
+    const quantityToUpdate = product.stock - quantity;
+    if (quantityToUpdate < 0 || product.stock < quantity) {
+      throw new Error("Estoque de produto insuficiente");
+    }
+    product.stock = quantityToUpdate;
 
     const sale = saleRepository.create({
       total,
@@ -39,7 +44,7 @@ export default class SaleService {
       product,
       user,
     });
-
+    await AppDataSource.getRepository(Product).save(product);
     return await saleRepository.save(sale);
   }
   async getSales() {

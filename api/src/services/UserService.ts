@@ -35,7 +35,7 @@ export class UserService {
     const temporaryPassword = Math.random().toString(36).slice(-8);
 
     const hashPassword = await bcrypt.hash(temporaryPassword, 10);
-
+    user.isActive = false;
     user.password = hashPassword;
 
     await userRepository.save(user);

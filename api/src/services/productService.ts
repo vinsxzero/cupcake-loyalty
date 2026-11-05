@@ -7,13 +7,13 @@ export default class ProductService {
     name: string,
     price: number,
     stock: number,
-    description: string,
+    category: string,
   ) {
     const newP = {
       name: name,
       price: price,
       stock: stock,
-      description: description,
+      category: category,
     };
     const product = await productRepository.create(newP);
 
@@ -28,7 +28,7 @@ export default class ProductService {
     name: string,
     price: number,
     stock: number,
-    description: string,
+    category: string,
   ) {
     const product = await productRepository.findOne({ where: { id } });
     if (!product) {
@@ -37,7 +37,7 @@ export default class ProductService {
     product.name = name;
     product.price = price;
     product.stock = stock;
-    product.description = description;
+    product.category = category;
     await productRepository.save(product);
   }
   async deleteProduct(id: string) {

@@ -24,6 +24,7 @@ export const AppDataSource = new DataSource({
   entities: [User, Sale, Product],
 
   migrations: ["dist/config/migrations/*.js"],
+
   synchronize: true,
 
   logging: ["schema"],

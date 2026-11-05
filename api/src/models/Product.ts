@@ -17,7 +17,7 @@ export class Product {
   stock!: number;
 
   @Column("varchar", { length: 255 })
-  description!: string;
+  category!: string;
 
   @OneToMany(() => Sale, (sale) => sale.product)
   sales!: Sale[];

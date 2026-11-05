@@ -3,9 +3,9 @@ import ProductService from "../services/productService.js";
 const productService = new ProductService();
 export default class ProductController {
   async createProduct(req: any, res: any) {
-    const { name, price, stock, description } = req.body;
+    const { name, price, stock, category } = req.body;
     try {
-      await productService.createProduct(name, price, stock, description);
+      await productService.createProduct(name, price, stock, category);
       res.status(201).json({ message: "Product created successfully" });
     } catch (error) {
       throw new Error("Error creating product");
@@ -22,9 +22,9 @@ export default class ProductController {
   }
   async updateProduct(req: any, res: any) {
     const { id } = req.params;
-    const { name, price, stock, description } = req.body;
+    const { name, price, stock, category } = req.body;
     try {
-      await productService.updateProduct(id, name, price, stock, description);
+      await productService.updateProduct(id, name, price, stock, category);
       res.status(200).json({ message: "Product updated successfully" });
     } catch (error) {
       console.error("Error updating product:", error);
