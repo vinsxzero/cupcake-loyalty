@@ -1,4 +1,4 @@
-import { UserService } from "../services/userService.js";
+import { UserService } from "../services/UserService.js";
 import { MailerSend, Sender, Recipient, EmailParams } from "mailersend";
 const userService = new UserService();
 
@@ -289,5 +289,11 @@ export class UserController {
       console.error("Error deleting user:", error);
       res.status(500).json({ message: "Internal server error" });
     }
+  }
+  async lougout(req: any, res: any) {
+    return res
+      .clearCookie("token")
+      .status(200)
+      .json({ message: "Logout successful" });
   }
 }

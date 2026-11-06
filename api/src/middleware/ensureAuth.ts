@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 export class middleware {
   async ensureAuth(req: any, res: any, next: any) {
     const token = req.cookies.token;
+
     if (!token) {
       return res
         .redirect("/")

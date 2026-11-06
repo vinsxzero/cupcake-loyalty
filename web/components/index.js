@@ -111,6 +111,23 @@ const allSalesBody = document.getElementById("allSalesBody");
 const productsBody = document.getElementById("productsBody");
 const saleForm = document.getElementById("saleForm");
 const productForm = document.getElementById("productForm");
+const logoutBtn = document.getElementById("logoutBtn");
+logoutBtn.addEventListener("click", async () => {
+  confirm("Tem certeza que deseja sair?") && (await logout());
+});
+
+async function logout() {
+  const response = await fetch("/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+  if (response.ok) {
+    window.location.reload();
+  } else {
+    const error = await response.json();
+    alert(`Erro ao sair: ${error.message}`);
+  }
+}
 
 const customerSelect = document.getElementById("saleCustomerSelect");
 async function searchUser() {
@@ -262,6 +279,60 @@ async function dashboardSales() {
   const dataS = await sales.json();
   return dataS;
 }
+async function deleteSale(saleId) {
+  const response = await fetch(`/delete-sale/${saleId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    alert(`Erro ao excluir venda: ${errorData.message}`);
+    return;
+  }
+  const result = await response.json();
+  alert(`Venda excluída com sucesso!`);
+  window.location.reload();
+  return result;
+}
+async function deleteUser(userId) {
+  const response = await fetch(`/delete-user/${userId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    alert(`Erro ao excluir venda: ${errorData.message}`);
+    return;
+  }
+  const result = await response.json();
+  alert(`Usuário excluído com sucesso!`);
+  window.location.reload();
+  return result;
+}
+async function deleteProduct(productId) {
+  const response = await fetch(`/delete-product/${productId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    alert(`Erro ao excluir produto: ${errorData.message}`);
+    return;
+  }
+  const result = await response.json();
+  alert(`Produto excluído com sucesso!`);
+  window.location.reload();
+  return result;
+}
 async function displayAllSales() {
   const dataS = await dashboardSales();
   for (i = 0; i < dataS.length; i++) {
@@ -273,6 +344,29 @@ async function displayAllSales() {
       <td>${dataS[i].paymentMethod}</td>
       <td>${money(dataS[i].total)}</td>
       <td>${dataS[i].status}</td>
+      <td>
+        <button class="icon-button delete-btn" onclick="deleteSale('${dataS[i].id}')">
+          <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class="lucide lucide-trash"
+  aria-hidden="true"
+>
+  <path d="M3 6h18"></path>
+  <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+  <path d="M19 6l-1 14H6L5 6"></path>
+  <path d="M10 11v6"></path>
+  <path d="M14 11v6"></path>
+</svg>
+        </button>
+      </td>
     `;
     allSalesBody.appendChild(row);
   }
@@ -289,7 +383,7 @@ async function displayDashboardSales() {
   ticketValue.textContent = money(totalSales / dataS.length);
   for (i = 0; i < 5; i++) {
     const row = document.createElement("tr");
-    const sale = dataS[i];
+
     row.innerHTML = `
       <td>${dataS[i].id}</td>
       <td>${capitalizeFirstLetter(dataS[i].user.name)}</td>
@@ -342,6 +436,29 @@ async function displayAllProducts() {
     <td>${dataP[i].stock}</td>
     <td>${money(dataP[i].price)}</td>
     <td>${stockStatus}</td>
+    <td>
+      <button class="icon-button delete-btn" onclick="deleteProduct('${dataP[i].id}')">
+        <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class="lucide lucide-trash"
+  aria-hidden="true"
+>
+  <path d="M3 6h18"></path>
+  <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+  <path d="M19 6l-1 14H6L5 6"></path>
+  <path d="M10 11v6"></path>
+  <path d="M14 11v6"></path>
+</svg>
+      </button>
+    </td>
     `;
     productsBody.appendChild(row);
   }
@@ -387,6 +504,29 @@ async function dashboardCustomers() {
       <td>${capitalizeFirstLetter(dataC[i].name)}</td>
       <td>${dataC[i].email}</td>
       <td>${dataC[i].role.toUpperCase()}</td>
+      <td>
+        <button class="icon-button delete-btn" onclick="deleteUser('${dataC[i].id}')">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-trash"
+            aria-hidden="true"
+          >
+            <path d="M3 6h18"></path>
+            <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+            <path d="M19 6l-1 14H6L5 6"></path>
+            <path d="M10 11v6"></path>
+            <path d="M14 11v6"></path>
+          </svg>
+        </button>
+      </td>
     `;
     tableCustomers.appendChild(row);
   }

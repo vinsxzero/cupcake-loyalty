@@ -31,11 +31,13 @@ export class Sale {
 
   @ManyToOne(() => Product, (product) => product.sales, {
     nullable: false,
+    onDelete: "CASCADE",
   })
   product!: Product;
 
   @ManyToOne(() => User, (user) => user.sales, {
     nullable: false,
+    onDelete: "CASCADE",
   })
   user!: User;
 }

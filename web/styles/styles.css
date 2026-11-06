@@ -1243,3 +1243,16 @@ hr {
   border-top: 1px solid var(--border);
   margin: 20px 0;
 }
+.icon-button i {
+  width: 18px;
+  height: 18px;
+}
+.delete-btn {
+  background: var(--danger);
+  border: none;
+  color: var(--light);
+  cursor: pointer;
+}
+.delete-btn svg {
+  color: white;
+}

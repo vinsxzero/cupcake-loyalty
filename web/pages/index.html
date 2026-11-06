@@ -81,6 +81,9 @@
             <button class="icon-button" id="topNewSale" title="Registrar venda">
               <i data-lucide="plus"></i>
             </button>
+            <button class="icon-button" id="logoutBtn" title="Sair do sistema">
+              <i data-lucide="log-out"></i>
+            </button>
           </div>
         </header>
 
@@ -220,26 +223,6 @@
                     Pesquise por cliente ou número da venda
                   </div>
                 </div>
-                <div class="table-actions">
-                  <label class="search-box">
-                    <i data-lucide="search"></i>
-                    <input
-                      id="salesSearch"
-                      placeholder="Buscar venda..."
-                      aria-label="Buscar venda"
-                    />
-                  </label>
-                  <select
-                    class="select"
-                    id="salesStatusFilter"
-                    aria-label="Filtrar por status"
-                  >
-                    <option value="">Todos os status</option>
-                    <option value="Concluída">Concluídas</option>
-                    <option value="Pendente">Pendentes</option>
-                    <option value="Cancelada">Canceladas</option>
-                  </select>
-                </div>
               </div>
               <div class="table-scroll">
                 <table>
@@ -299,14 +282,6 @@
             <article class="panel">
               <div class="panel-header">
                 <div class="panel-title">Catálogo de produtos</div>
-                <label class="search-box">
-                  <i data-lucide="search"></i>
-                  <input
-                    id="productSearch"
-                    placeholder="Buscar produto..."
-                    aria-label="Buscar produto"
-                  />
-                </label>
               </div>
               <div class="table-scroll">
                 <table>
@@ -341,14 +316,6 @@
             <article class="panel">
               <div class="panel-header">
                 <div class="panel-title">Clientes cadastrados</div>
-                <label class="search-box">
-                  <i data-lucide="search"></i>
-                  <input
-                    id="customerSearch"
-                    placeholder="Buscar cliente..."
-                    aria-label="Buscar cliente"
-                  />
-                </label>
               </div>
               <div class="table-scroll">
                 <table>
