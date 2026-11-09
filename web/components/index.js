@@ -176,8 +176,9 @@ async function createProduct() {
   if (!response.ok) {
     const errorData = await response.json();
     alert(`Erro ao criar produto: ${errorData.message}`);
-    return;
   }
+  alert(`Produto criado com sucesso!`);
+  window.location.reload();
   return data;
 }
 productForm.addEventListener("submit", async (event) => {
@@ -280,6 +281,12 @@ async function dashboardSales() {
   return dataS;
 }
 async function deleteSale(saleId) {
+  const confirmDelete = confirm(
+    "Tem certeza que deseja excluir esta venda? Esta ação não pode ser desfeita.",
+  );
+  if (!confirmDelete) {
+    return;
+  }
   const response = await fetch(`/delete-sale/${saleId}`, {
     method: "DELETE",
     headers: {
@@ -298,6 +305,12 @@ async function deleteSale(saleId) {
   return result;
 }
 async function deleteUser(userId) {
+  const confirmDelete = confirm(
+    "Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.",
+  );
+  if (!confirmDelete) {
+    return;
+  }
   const response = await fetch(`/delete-user/${userId}`, {
     method: "DELETE",
     headers: {
@@ -307,7 +320,7 @@ async function deleteUser(userId) {
   });
   if (!response.ok) {
     const errorData = await response.json();
-    alert(`Erro ao excluir venda: ${errorData.message}`);
+    alert(`Erro ao excluir usuário: ${errorData.message}`);
     return;
   }
   const result = await response.json();
@@ -316,6 +329,12 @@ async function deleteUser(userId) {
   return result;
 }
 async function deleteProduct(productId) {
+  const confirmDelete = confirm(
+    "Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.",
+  );
+  if (!confirmDelete) {
+    return;
+  }
   const response = await fetch(`/delete-product/${productId}`, {
     method: "DELETE",
     headers: {
@@ -335,12 +354,13 @@ async function deleteProduct(productId) {
 }
 async function displayAllSales() {
   const dataS = await dashboardSales();
+
   for (i = 0; i < dataS.length; i++) {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${dataS[i].id}</td>
       <td>${capitalizeFirstLetter(dataS[i].user.name)}</td>
-      <td>${new Date(dataS[i].CreatedAt).toLocaleDateString()}</td>
+      <td>${new Date(dataS[i].createdAt).toLocaleDateString()}</td>
       <td>${dataS[i].paymentMethod}</td>
       <td>${money(dataS[i].total)}</td>
       <td>${dataS[i].status}</td>
@@ -374,6 +394,7 @@ async function displayAllSales() {
 async function displayDashboardSales() {
   const dataS = await dashboardSales();
   let totalSales = 0;
+
   //total amount of sales
   for (i = 0; i < dataS.length; i++) {
     totalSales += dataS[i].total;
@@ -383,11 +404,12 @@ async function displayDashboardSales() {
   ticketValue.textContent = money(totalSales / dataS.length);
   for (i = 0; i < 5; i++) {
     const row = document.createElement("tr");
+    console.log("Sale data:", dataS[i]);
 
     row.innerHTML = `
       <td>${dataS[i].id}</td>
       <td>${capitalizeFirstLetter(dataS[i].user.name)}</td>
-      <td>${new Date(dataS[i].CreatedAt).toLocaleDateString()}</td>
+      <td>${new Date(dataS[i].createdAt).toLocaleDateString()}</td>
       <td>${dataS[i].paymentMethod}</td>
       <td>${money(dataS[i].total)}</td>
       <td>${dataS[i].status}</td>
@@ -498,9 +520,11 @@ async function dashboardCustomers() {
     credentials: "include",
   });
   const dataC = await customers.json();
+  console.log("Customer role:", dataC);
   for (i = 0; i < dataC.length; i++) {
     const row = document.createElement("tr");
-    row.innerHTML = `
+    if (dataC[i].role === "client") {
+      row.innerHTML = `
       <td>${capitalizeFirstLetter(dataC[i].name)}</td>
       <td>${dataC[i].email}</td>
       <td>${dataC[i].role.toUpperCase()}</td>
@@ -528,7 +552,38 @@ async function dashboardCustomers() {
         </button>
       </td>
     `;
-    tableCustomers.appendChild(row);
+      tableCustomers.appendChild(row);
+    } else {
+      row.innerHTML = `
+      <td>${capitalizeFirstLetter(dataC[i].name)}</td>
+      <td>${dataC[i].email}</td>
+      <td>${dataC[i].role.toUpperCase()}</td>
+      <td>
+        <button class="icon-button delete-btn disabled" disabled>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-trash"
+            aria-hidden="true"
+          >
+            <path d="M3 6h18"></path>
+            <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+            <path d="M19 6l-1 14H6L5 6"></path>
+            <path d="M10 11v6"></path>
+            <path d="M14 11v6"></path>
+          </svg>
+        </button>
+      </td>
+    `;
+      tableCustomers.appendChild(row);
+    }
   }
 }
 const customerForm = document.getElementById("customerForm");

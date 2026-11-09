@@ -311,6 +311,9 @@ export class UserService {
     if (!user) {
       throw new Error("User not found");
     }
+    if (user.role === "admin") {
+      throw new Error("Cannot delete an admin user");
+    }
     await userRepository.remove(user);
   }
 }

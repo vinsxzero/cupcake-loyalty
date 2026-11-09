@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import { UserController } from "./controllers/UserController.js";
+import { UserController } from "./controllers/userController.js";
 import { middleware } from "./middleware/ensureAuth.js";
 import ProductController from "./controllers/productController.js";
 import SaleController from "./controllers/saleController.js";

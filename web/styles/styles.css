@@ -1256,3 +1256,10 @@ hr {
 .delete-btn svg {
   color: white;
 }
+
+.delete-btn.disabled {
+  background: rgb(212, 210, 210);
+  border: none;
+  color: var(--light);
+  cursor: pointer;
+}
