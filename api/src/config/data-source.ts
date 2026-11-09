@@ -8,24 +8,36 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// export const AppDataSource = new DataSource({
+//   type: "mysql",
+
+//   host: process.env.MYSQLHOST,
+
+//   port: Number(process.env.MYSQLPORT),
+
+//   username: process.env.MYSQLUSER,
+
+//   password: process.env.MYSQLPASSWORD,
+
+//   database: process.env.MYSQLDATABASE,
+
+//   entities: [User, Sale, Product],
+
+//   migrations: ["dist/config/migrations/*.js"],
+
+//   synchronize: true,
+
+//   logging: ["schema"],
+// });
+
 export const AppDataSource = new DataSource({
-  type: "mysql",
+  type: "postgres",
 
-  host: process.env.MYSQLHOST,
-
-  port: Number(process.env.MYSQLPORT),
-
-  username: process.env.MYSQLUSER,
-
-  password: process.env.MYSQLPASSWORD,
-
-  database: process.env.MYSQLDATABASE,
-
+  url: process.env.POSTGRES_URL,
   entities: [User, Sale, Product],
+  ssl: false,
 
   migrations: ["dist/config/migrations/*.js"],
-
   synchronize: true,
-
-  logging: ["schema"],
+  logging: true,
 });

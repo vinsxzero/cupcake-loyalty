@@ -3,12 +3,7 @@ import { AppDataSource } from "../config/data-source.js";
 
 const productRepository = AppDataSource.getRepository(Product);
 export default class ProductService {
-  async createProduct(
-    name: string,
-    price: number,
-    stock: number,
-    category: string,
-  ) {
+  async createProduct(name: any, price: any, stock: any, category: any) {
     const newP = {
       name: name,
       price: price,
@@ -25,10 +20,10 @@ export default class ProductService {
   }
   async updateProduct(
     id: string,
-    name: string,
-    price: number,
-    stock: number,
-    category: string,
+    name: any,
+    price: any,
+    stock: any,
+    category: any,
   ) {
     const product = await productRepository.findOne({ where: { id } });
     if (!product) {

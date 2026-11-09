@@ -1,4 +1,4 @@
-import { UserService } from "../services/UserService.js";
+import { UserService } from "../services/userService.js";
 import { MailerSend, Sender, Recipient, EmailParams } from "mailersend";
 const userService = new UserService();
 

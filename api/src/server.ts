@@ -19,12 +19,16 @@ app.use(express.json());
 app.use("/", router);
 
 const PORT = process.env.PORT;
+async function startServer() {
+  try {
+    await AppDataSource.initialize();
+    console.log("PostgreSQL conectado com sucesso!");
 
-AppDataSource.initialize()
-
-  .catch((err) => {
-    console.error("Error during Data Source initialization:", err);
-  });
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+    app.listen(PORT, () => {
+      console.log("Servidor iniciado!");
+    });
+  } catch (error) {
+    console.error("Error during Data Source initialization:", error);
+  }
+}
+startServer();

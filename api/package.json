@@ -27,6 +27,7 @@
     "mailersend": "^3.7.0",
     "mysql2": "^3.24.6",
     "path": "^0.12.7",
+    "pg": "^8.23.1",
     "typeorm": "^1.1.2"
   },
   "devDependencies": {

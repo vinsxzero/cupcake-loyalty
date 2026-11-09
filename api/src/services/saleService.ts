@@ -8,12 +8,12 @@ const saleRepository = AppDataSource.getRepository(Sale);
 
 export default class SaleService {
   async createSale(
-    total: number,
-    status: string,
-    paymentMethod: string,
-    quantity: number,
-    productId: string,
-    userId: string,
+    total: any,
+    status: any,
+    paymentMethod: any,
+    quantity: any,
+    productId: any,
+    userId: any,
   ) {
     const product = await AppDataSource.getRepository(Product).findOne({
       where: { id: productId },
@@ -64,7 +64,7 @@ export default class SaleService {
       },
       relations: { user: true, product: true },
       order: {
-        CreatedAt: "DESC",
+        createdAt: "DESC",
       },
     });
   }
