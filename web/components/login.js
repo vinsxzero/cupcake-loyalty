@@ -5,7 +5,7 @@ async function handleLogin() {
   const email = mailInput.value;
   const password = passInput.value;
   try {
-    const response = await fetch("http://localhost:3000/login", {
+    const response = await fetch("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

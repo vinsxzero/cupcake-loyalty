@@ -20,17 +20,14 @@ async function handleActivate() {
     alert("As senhas não coincidem. Por favor, tente novamente.");
     return;
   }
-  const response = await fetch(
-    `http://localhost:3000/activate-user/${encodeURIComponent(email)}`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ email, oldPassword, newPassword }),
+  const response = await fetch(`/activate-user/${encodeURIComponent(email)}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    credentials: "include",
+    body: JSON.stringify({ email, oldPassword, newPassword }),
+  });
   const data = await response.json();
   if (!response.ok) {
     alert(data.message);
@@ -44,7 +41,7 @@ async function forgetPassword() {
   const email = emailForget.value;
   console.log("Email for forget password:", email);
   try {
-    const response = await fetch(`http://localhost:3000/forget-pass`, {
+    const response = await fetch(`/forget-pass`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
