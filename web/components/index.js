@@ -397,7 +397,7 @@ async function displayDashboardSales() {
 
   //total amount of sales
   for (i = 0; i < dataS.length; i++) {
-    totalSales += dataS[i].total;
+    totalSales += parseFloat(dataS[i].total);
   }
   revenueValue.textContent = money(totalSales);
   salesValue.textContent = dataS.length;

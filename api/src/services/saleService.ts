@@ -1,6 +1,6 @@
 import { Sale } from "../models/Sale.js";
 import { AppDataSource } from "../config/data-source.js";
-import { In } from "typeorm/browser/find-options/operator/In.js";
+
 import { User } from "../models/User.js";
 import { Product } from "../models/Product.js";
 
