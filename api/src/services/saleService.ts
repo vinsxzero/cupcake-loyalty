@@ -68,6 +68,29 @@ export default class SaleService {
       },
     });
   }
+  async getSaleById(id: string) {
+    const sale = await saleRepository.findOne({
+      where: { id },
+      select: {
+        user: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
+        product: {
+          id: true,
+          name: true,
+          price: true,
+        },
+      },
+      relations: { user: true, product: true },
+    });
+    if (!sale) {
+      throw new Error("Sale not found");
+    }
+    return sale;
+  }
   async updateSale(
     id: string,
     saleData: Partial<Sale> & {

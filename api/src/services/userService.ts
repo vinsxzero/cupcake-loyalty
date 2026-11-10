@@ -44,6 +44,13 @@ export class UserService {
 
     return { message: "Temporary password generated successfully" };
   }
+  async getUserById(id: string) {
+    const user = await userRepository.findOneBy({ id });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
+  }
   async sendEmailForget(user: any, temporaryPassword: string) {
     try {
       const mailerSend = new MailerSend({
@@ -261,7 +268,18 @@ export class UserService {
     });
     return users;
   }
-
+  async myInfo(token: string) {
+    try {
+      const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
+      const user = await userRepository.findOneBy({ id: decoded.id });
+      if (!user) {
+        throw new Error("User not found");
+      }
+      return user;
+    } catch (error) {
+      throw new Error("Invalid token");
+    }
+  }
   async loginUser(email: string, password: string) {
     const user = await userRepository.findOneBy({ email });
     if (!user) {

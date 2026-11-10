@@ -4,6 +4,25 @@ const money = (value) =>
     currency: "BRL",
   });
 
+async function myInfo() {
+  const response = await fetch("/my-info", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    alert(`Erro ao buscar informações do usuário: ${errorData.message}`);
+  }
+  const data = await response.json();
+  $("#userName").textContent = capitalizeFirstLetter(data.name);
+  $("#userRole").textContent = capitalizeFirstLetter(data.role);
+  $("#currentDate").textContent = today();
+}
+myInfo();
+async function blockAccess() {}
 const today = () => new Date().toLocaleDateString("pt-BR");
 
 const $ = (selector) => document.querySelector(selector);
@@ -17,20 +36,37 @@ function openModal(id) {
 
 function closeModal(id) {
   $("#" + id).classList.remove("open");
+  saleForm.reset();
+
+  saleTotal.textContent = "R$ 0,00";
 }
 
 // Abrir as caixas de formulário
 $("#newSaleBtn")?.addEventListener("click", () => openModal("saleModal"));
 
-$("#salesNewBtn")?.addEventListener("click", () => openModal("saleModal"));
+$("#salesNewBtn")?.addEventListener("click", () => {
+  saleTotal.textContent = "R$ 0,00";
+  saleForm.dataset.saleId = "";
+  openModal("saleModal");
+});
 
-$("#topNewSale")?.addEventListener("click", () => openModal("saleModal"));
+$("#topNewSale")?.addEventListener("click", () => {
+  saleTotal.textContent = "R$ 0,00";
+  saleForm.dataset.saleId = "";
+  openModal("saleModal");
+});
 
-$("#newProductBtn")?.addEventListener("click", () => openModal("productModal"));
+$("#newProductBtn")?.addEventListener("click", () => {
+  productForm.dataset.productId = "";
+  productForm.reset();
+  openModal("productModal");
+});
 
-$("#newCustomerBtn")?.addEventListener("click", () =>
-  openModal("customerModal"),
-);
+$("#newCustomerBtn")?.addEventListener("click", () => {
+  customerForm.dataset.customerId = "";
+  customerForm.reset();
+  openModal("customerModal");
+});
 
 // Fechar pelo botão de fechamento
 $$("[data-close]").forEach((button) =>
@@ -163,23 +199,39 @@ async function createProduct() {
     price,
     stock,
   };
-  const response = await fetch("/create-product", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(productData),
-  });
+  if (
+    productForm.dataset.productId == undefined ||
+    productForm.dataset.productId === ""
+  ) {
+    await fetch("/create-product", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(productData),
+    });
+    alert(`Produto criado com sucesso!`);
+    window.location.reload();
+  } else {
+    await fetch(`/update-product/${productForm.dataset.productId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(productData),
+    });
+    alert(`Produto atualizado com sucesso!`);
+    window.location.reload();
+  }
+
   const data = await response.json();
   console.log(data);
   if (!response.ok) {
     const errorData = await response.json();
     alert(`Erro ao criar produto: ${errorData.message}`);
   }
-  alert(`Produto criado com sucesso!`);
-  window.location.reload();
-  return data;
 }
 productForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -244,29 +296,41 @@ async function createSale() {
     total: saleTotal,
     status: status,
   };
-
-  const response = await fetch("/create-sale", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(saleData),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    alert(`Erro ao criar venda: ${errorData.message}`);
-    return;
+  const saleId = saleForm.dataset.saleId;
+  if (saleId === "" || saleId === undefined) {
+    const response = await fetch("/create-sale", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(saleData),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      alert(`Erro ao criar venda: ${errorData.message}`);
+      return;
+    }
+    const result = await response.json();
+    return result;
+  } else {
+    const response = await fetch(`/update-sale/${saleId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(saleData),
+    });
+    return response.json();
   }
-  const result = await response.json();
-  return result;
 }
 
 saleForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   await createSale();
   closeModal("saleModal");
-  location.reload();
+  window.location.reload();
 });
 async function dashboardSales() {
   const sales = await fetch("/get-sales", {
@@ -367,29 +431,69 @@ async function displayAllSales() {
       <td>
         <button class="icon-button delete-btn" onclick="deleteSale('${dataS[i].id}')">
           <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="24"
-  height="24"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width="2"
-  stroke-linecap="round"
-  stroke-linejoin="round"
-  class="lucide lucide-trash"
-  aria-hidden="true"
->
-  <path d="M3 6h18"></path>
-  <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
-  <path d="M19 6l-1 14H6L5 6"></path>
-  <path d="M10 11v6"></path>
-  <path d="M14 11v6"></path>
-</svg>
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-trash"
+              aria-hidden="true"
+            >
+              <path d="M3 6h18"></path>
+              <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"></path>
+              <path d="M19 6l-1 14H6L5 6"></path>
+              <path d="M10 11v6"></path>
+              <path d="M14 11v6"></path>
+            </svg>
         </button>
-      </td>
-    `;
+        
+        </td>
+        <td>
+        <button class="icon-button edit-sale-btn" onclick="infoSale('${dataS[i].id}')" >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" 
+          height="24" viewBox="0 0 24 24" fill="none" 
+          stroke="currentColor" stroke-width="2" 
+          stroke-linecap="round" stroke-linejoin="round" 
+          class="lucide lucide-pen-line preview-icon">
+          <path d="M13 21h8"/>
+          <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 
+          16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 
+          .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+          </svg>
+        </td>
+          `;
     allSalesBody.appendChild(row);
   }
+}
+const editSalesBtns = document.querySelectorAll(".edit-sale-btn");
+
+async function infoSale(saleId) {
+  saleForm.dataset.saleId = saleId;
+  const response = await fetch(`/get-sale/${saleId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  openModal("saleModal");
+  const sale = await response.json();
+  customerSelect.value = sale.user.id;
+
+  let saleProductSelected = document.querySelector(
+    `#saleProduct option[data-id="${sale.product.id}"]`,
+  );
+  if (saleProductSelected) {
+    saleProductSelected.selected = true;
+  }
+  salePayment.value = sale.paymentMethod;
+  salePayment.value = sale.paymentMethod;
+  saleStatus.value = sale.status;
+  document.getElementById("saleTotal").textContent = money(sale.total);
 }
 async function displayDashboardSales() {
   const dataS = await dashboardSales();
@@ -407,7 +511,6 @@ async function displayDashboardSales() {
   ticketValue.textContent = money(totalSales / totalSalesCount);
   for (i = 0; i < 5; i++) {
     const row = document.createElement("tr");
-    console.log("Sale data:", dataS[i]);
 
     row.innerHTML = `
       <td>${dataS[i].id}</td>
@@ -485,10 +588,23 @@ async function displayAllProducts() {
 </svg>
       </button>
     </td>
+    <td>
+      <button class="icon-button edit-sale-btn" onclick="infoProduct('${dataP[i].id}')" >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" 
+        height="24" viewBox="0 0 24 24" fill="none" 
+        stroke="currentColor" stroke-width="2" 
+        stroke-linecap="round" stroke-linejoin="round" 
+        class="lucide lucide-pen-line preview-icon">
+        <path d="M13 21h8"/>
+        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 
+        16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 
+        .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+        </svg>
+      </button>
+    </td>
     `;
     productsBody.appendChild(row);
   }
-
   inventoryProductCount.textContent = dataP.length;
 
   inventoryLow.textContent = lowStock;
@@ -499,6 +615,24 @@ async function displayAllProducts() {
   } else {
     lowStockCount.textContent = lowStock;
   }
+}
+async function infoProduct(productId) {
+  const product = await fetch(`/get-product/${productId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  const dataP = await product.json();
+  openModal("productModal");
+  productForm.dataset.productId = productId;
+  productName.value = dataP.name;
+  productCategory.value = dataP.category;
+  productPrice.value = dataP.price;
+  productQuantity.value = dataP.stock;
+  console.log("Product data:", dataP);
 }
 async function displayDashboardProducts() {
   const dataP = await dashboardProducts();
@@ -561,6 +695,9 @@ async function dashboardCustomers() {
           </svg>
         </button>
       </td>
+      
+      
+    </td>
     `;
       tableCustomers.appendChild(row);
     } else {
@@ -596,6 +733,7 @@ async function dashboardCustomers() {
     }
   }
 }
+
 const customerForm = document.getElementById("customerForm");
 const customerName = document.getElementById("customerName");
 const customerEmail = document.getElementById("customerEmail");
@@ -621,22 +759,27 @@ async function createCustomer() {
     role: role,
     password: password,
   };
-
-  const response = await fetch("/create-user", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(customerData),
-  });
-  if (response.ok) {
-    const result = await response.json();
-    alert(`Cliente criado com sucesso! Senha: ${password}`);
-    return result;
+  if (
+    !customerForm.dataset.customerId ||
+    customerForm.dataset.customerId === ""
+  ) {
+    const response = await fetch("/create-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(customerData),
+    });
+    if (response.ok) {
+      const result = await response.json();
+      alert(`Cliente criado com sucesso! Senha: ${password}`);
+      return result;
+    }
+    console.log(response);
+    alert("Erro ao criar cliente. Verifique se o e-mail já está em uso.");
+  } else {
   }
-  console.log(response);
-  alert("Erro ao criar cliente. Verifique se o e-mail já está em uso.");
 }
 customerForm.addEventListener("submit", async (e) => {
   e.preventDefault();

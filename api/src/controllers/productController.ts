@@ -11,6 +11,16 @@ export default class ProductController {
       throw new Error("Error creating product");
     }
   }
+  async getProductById(req: any, res: any) {
+    const { id } = req.params;
+    try {
+      const product = await productService.getProductById(id);
+      res.status(200).json(product);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      res.status(404).json({ message: "Product not found" });
+    }
+  }
   async getProducts(req: any, res: any) {
     try {
       const products = await productService.getProducts();

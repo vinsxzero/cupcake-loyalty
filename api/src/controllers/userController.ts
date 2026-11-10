@@ -15,6 +15,22 @@ export class UserController {
       res.status(500).json({ message: "Internal server error" });
     }
   }
+  async myInfo(req: any, res: any) {
+    try {
+      const token = req.cookies.token;
+      if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const user = await userService.myInfo(token);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      return res.status(200).json(user);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
   async forgetPassword(req: any, res: any) {
     try {
       const { email } = req.body;

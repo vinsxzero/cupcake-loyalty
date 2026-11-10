@@ -56,7 +56,7 @@ router.post(
   "/update-password",
   userController.updatePassword.bind(userController),
 ); //✅
-
+router.get("/my-info", ensureAuth, userController.myInfo.bind(userController)); //✅
 router.delete(
   "/delete-user/:id",
   ensureAuth,
@@ -73,6 +73,11 @@ router.get(
   "/get-products",
   ensureAuth,
   productController.getProducts.bind(productController),
+); //✅
+router.get(
+  "/get-product/:id",
+  ensureAuth,
+  productController.getProductById.bind(productController),
 ); //✅
 router.put(
   "/update-product/:id",
@@ -100,6 +105,11 @@ router.put(
   "/update-sale/:id",
   ensureAuth,
   saleController.updateSale.bind(saleController),
+); //✅
+router.get(
+  "/get-sale/:id",
+  ensureAuth,
+  saleController.getSaleById.bind(saleController),
 ); //✅
 router.delete(
   "/delete-sale/:id",

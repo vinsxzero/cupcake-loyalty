@@ -35,6 +35,13 @@ export default class ProductService {
     product.category = category;
     await productRepository.save(product);
   }
+  async getProductById(id: string) {
+    const product = await productRepository.findOne({ where: { id } });
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    return product;
+  }
   async deleteProduct(id: string) {
     const product = await productRepository.findOne({ where: { id } });
     if (!product) {

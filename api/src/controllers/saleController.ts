@@ -17,13 +17,21 @@ export default class SaleController {
       );
       res.status(201).json(sale);
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          message: "Quantidade insuficiente em estoque",
-          error: Error as any,
-        });
+      res.status(500).json({
+        message: "Quantidade insuficiente em estoque",
+        error: Error as any,
+      });
       throw new Error("Error creating sale");
+    }
+  }
+  async getSaleById(req: any, res: any) {
+    const { id } = req.params;
+    try {
+      const sale = await saleService.getSaleById(id);
+      res.status(200).json(sale);
+    } catch (error) {
+      res.status(404).json({ message: "Sale not found" });
+      throw new Error("Error fetching sale");
     }
   }
   async getSales(req: any, res: any) {
