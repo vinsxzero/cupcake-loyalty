@@ -394,14 +394,17 @@ async function displayAllSales() {
 async function displayDashboardSales() {
   const dataS = await dashboardSales();
   let totalSales = 0;
-
+  let totalSalesCount = 0;
   //total amount of sales
   for (i = 0; i < dataS.length; i++) {
-    totalSales += parseFloat(dataS[i].total);
+    if (dataS[i].status !== "CANCELADA") {
+      totalSales += parseFloat(dataS[i].total);
+      totalSalesCount++;
+    }
   }
   revenueValue.textContent = money(totalSales);
   salesValue.textContent = dataS.length;
-  ticketValue.textContent = money(totalSales / dataS.length);
+  ticketValue.textContent = money(totalSales / totalSalesCount);
   for (i = 0; i < 5; i++) {
     const row = document.createElement("tr");
     console.log("Sale data:", dataS[i]);
@@ -432,6 +435,7 @@ const inventoryProductCount = document.getElementById("inventoryProductCount");
 const inventoryLow = document.getElementById("inventoryLow");
 const inventoryUnits = document.getElementById("inventoryUnits");
 const inventoryValue = document.getElementById("inventoryValue");
+const lowStockCount = document.getElementById("lowStockCount");
 async function displayAllProducts() {
   const dataP = await dashboardProducts();
   let lowStock = 0;
@@ -486,9 +490,15 @@ async function displayAllProducts() {
   }
 
   inventoryProductCount.textContent = dataP.length;
+
   inventoryLow.textContent = lowStock;
   inventoryUnits.textContent = allStock;
   inventoryValue.textContent = money(invValue);
+  if (lowStock == 0) {
+    lowStockCount.style.display = "none";
+  } else {
+    lowStockCount.textContent = lowStock;
+  }
 }
 async function displayDashboardProducts() {
   const dataP = await dashboardProducts();

@@ -41,19 +41,12 @@
           </button>
         </nav>
 
-        <div class="nav-label">Análise</div>
-        <nav class="nav-list">
-          <button class="nav-item" data-page="reports">
-            <i data-lucide="chart-no-axes-combined"></i> Relatórios
-          </button>
-        </nav>
-
         <div class="sidebar-bottom">
           <button class="nav-item" data-page="settings">
             <i data-lucide="settings"></i> Configurações
           </button>
           <div class="user-profile">
-            <div class="avatar">DG</div>
+            <div class="avatar"><i data-lucide="circle-user"></i></div>
             <div>
               <div class="user-name">Administrador</div>
               <div class="user-role">Gestão da confeitaria</div>
@@ -406,13 +399,25 @@
                 </div>
               </div>
               <div class="product-list">
-                <p style="line-height: 1.9; color: var(--muted)">
-                  Esta versão é uma demonstração de interface, com registros
-                  mantidos somente durante a sessão da página. Para uso real,
-                  será necessário integrar uma API, banco de dados, autenticação
-                  e regras de acesso.
+                <p
+                  style="
+                    line-height: 1.9;
+                    color: var(--muted);
+                    text-align: justify;
+                  "
+                >
+                  Este sistema foi desenvolvido como resolução da proposta do
+                  Projeto Integrador Transdisciplinar do curso de Engenharia de
+                  Software da Universidade Cruzeiro do Sul. O objetivo é
+                  fornecer uma ferramenta de gestão de vendas e estoque para
+                  confeitarias.
                 </p>
               </div>
+            </article>
+            <article class="panel">
+              <button class="button button-secondary" id="logoutBtn2">
+                <i data-lucide="log-out"></i> Sair do sistema
+              </button>
             </article>
           </section>
         </div>
@@ -483,6 +488,8 @@
               <select id="saleStatus">
                 <option value="CONCLUIDA">Concluída</option>
                 <option value="PENDENTE">Pendente</option>
+                <option value="CANCELADA">Cancelada</option>
+                <option value="ENVIADO">Enviado</option>
               </select>
             </div>
           </div>

@@ -1263,3 +1263,9 @@ hr {
   color: var(--light);
   cursor: pointer;
 }
+#logoutBtn2 {
+  width: 100%;
+  border: none;
+  color: var(--light);
+  cursor: pointer;
+}
