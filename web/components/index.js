@@ -480,8 +480,10 @@ async function infoSale(saleId) {
     },
     credentials: "include",
   });
+
   openModal("saleModal");
   const sale = await response.json();
+  console.log("Sale data:", sale);
   customerSelect.value = sale.user.id;
 
   let saleProductSelected = document.querySelector(
@@ -492,6 +494,7 @@ async function infoSale(saleId) {
   }
   salePayment.value = sale.paymentMethod;
   salePayment.value = sale.paymentMethod;
+  saleQuantity.value = sale.quantity;
   saleStatus.value = sale.status;
   document.getElementById("saleTotal").textContent = money(sale.total);
 }

@@ -105,7 +105,7 @@ export default class SaleService {
     if (!sale) {
       throw new Error("Sale not found");
     }
-
+    const actualQuantity = sale.quantity;
     const { productId, userId, ...data } = saleData;
 
     Object.assign(sale, data);
@@ -118,7 +118,15 @@ export default class SaleService {
       if (!product) {
         throw new Error("Product not found");
       }
-
+      if (sale.quantity !== actualQuantity) {
+        const quantityDifference = sale.quantity - actualQuantity;
+        const quantityToUpdate = product.stock - quantityDifference;
+        if (quantityToUpdate < 0 || product.stock < quantityDifference) {
+          throw new Error("Estoque de produto insuficiente");
+        }
+        product.stock = quantityToUpdate;
+        await AppDataSource.getRepository(Product).save(product);
+      }
       sale.product = product;
     }
 
