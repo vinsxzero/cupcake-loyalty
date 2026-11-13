@@ -35,3 +35,9 @@ formLogin.addEventListener("submit", (e) => {
   e.preventDefault();
   handleLogin();
 });
+const togglePassword = document.getElementById("togglePassword");
+
+async function displayPass() {
+  passInput.type = passInput.type === "password" ? "text" : "password";
+}
+togglePassword.addEventListener("click", displayPass);

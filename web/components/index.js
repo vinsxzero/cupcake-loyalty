@@ -498,6 +498,10 @@ async function infoSale(saleId) {
   saleStatus.value = sale.status;
   document.getElementById("saleTotal").textContent = money(sale.total);
 }
+const logoutBtn2 = document.getElementById("logoutBtn2");
+logoutBtn2.addEventListener("click", async () => {
+  confirm("Tem certeza que deseja sair?") && (await logout());
+});
 async function displayDashboardSales() {
   const dataS = await dashboardSales();
   let totalSales = 0;

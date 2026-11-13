@@ -1269,3 +1269,6 @@ hr {
   color: var(--light);
   cursor: pointer;
 }
+#togglePassword {
+  cursor: pointer;
+}
