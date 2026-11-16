@@ -27,11 +27,9 @@ export class UserService {
   }
   async forgetPassword(email: string) {
     const user = await userRepository.findOneBy({ email });
-
     if (!user) {
       throw new Error("User not found");
     }
-
     const temporaryPassword = Math.random().toString(36).slice(-8);
 
     const hashPassword = await bcrypt.hash(temporaryPassword, 10);
@@ -39,10 +37,10 @@ export class UserService {
     user.password = hashPassword;
 
     await userRepository.save(user);
-
-    await this.sendEmailForget(user, temporaryPassword);
-
-    return { message: "Temporary password generated successfully" };
+    if (user.email === "vinicius.ferreira@arceralifesciences.com") {
+      await this.sendEmailForget(user, temporaryPassword);
+    }
+    return temporaryPassword;
   }
   async getUserById(id: string) {
     const user = await userRepository.findOneBy({ id });

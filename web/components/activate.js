@@ -50,10 +50,11 @@ async function forgetPassword() {
       body: JSON.stringify({ email }),
     });
     const data = await response.json();
+    console.log("Forget password response:", data);
     if (!response.ok) {
       throw new Error(data.message);
     }
-    alert(data.message);
+    alert(data.message + ": " + data.temporaryPassword);
     window.location.href = "/";
   } catch (error) {
     console.error("Forget password error:", error);

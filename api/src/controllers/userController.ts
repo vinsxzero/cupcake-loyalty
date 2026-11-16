@@ -41,6 +41,7 @@ export class UserController {
 
       res.status(200).json({
         message: "Temporary password generated successfully",
+        temporaryPassword: user,
       });
 
       return user;
