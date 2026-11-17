@@ -34,8 +34,9 @@ export default class SaleService {
     if (quantityToUpdate < 0 || product.stock < quantity) {
       throw new Error("Estoque de produto insuficiente");
     }
-    product.stock = quantityToUpdate;
-
+    if (quantity < 1 || quantity > 99) {
+      throw new Error("Quantidade inválida. Deve ser entre 1 e 99.");
+    }
     const sale = saleRepository.create({
       total,
       status,
@@ -45,6 +46,7 @@ export default class SaleService {
       user,
     });
     await AppDataSource.getRepository(Product).save(product);
+    product.stock = quantityToUpdate;
     return await saleRepository.save(sale);
   }
   async getSales() {
